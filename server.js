@@ -95,6 +95,19 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// Root welcome & API status endpoint (prevents "Cannot GET /" error)
+app.get('/', (req, res) => {
+  res.json({
+    ok: true,
+    name: 'Smart Hotel Management System API',
+    status: 'online',
+    environment: process.env.VERCEL ? 'vercel-serverless' : 'node-server',
+    dbStatus: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    healthCheck: '/api/health',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Root API status endpoint
 app.get('/api', (req, res) => {
   res.json({
